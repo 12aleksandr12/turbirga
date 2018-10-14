@@ -66,11 +66,12 @@ class RegistrationForm extends ActiveRecord
     }
 
 
-    protected function getUser()
+    public function getUser()
     {
         if ($this->_user === null) {
             //$this->save();
-            $this->_user = User::findByUsername($this->username);
+            //$this->_user = User::findByUsername($this->username);
+            $this->_user = User::find()->where(['username'=>$this->username])->one();
         }
 
         return $this->_user;

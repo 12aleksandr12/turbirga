@@ -107,7 +107,7 @@ class SiteController extends Controller
             if( $model->save() ) {
                 //$model->save();
 
-                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                return Yii::$app->user->login($model->getUser(), $model->rememberMe ? 3600 * 24 * 30 : 0);
 
                 //return $this->goHome();
             }
