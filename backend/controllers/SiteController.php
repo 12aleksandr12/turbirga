@@ -6,6 +6,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\RegistrationForm;
+//use common\models\User;
 
 /**
  * Site controller
@@ -15,7 +17,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             'access' => [
@@ -30,6 +32,11 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['registration', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -39,7 +46,7 @@ class SiteController extends Controller
                 ],
             ],
         ];
-    }
+    }*/
 
     /**
      * {@inheritdoc}
@@ -71,7 +78,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+           return $this->goHome();
         }
 
         $model = new LoginForm();
@@ -80,10 +87,36 @@ class SiteController extends Controller
         } else {
             $model->password = '';
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            return $this->render('login', ['model' => $model,]);
         }
+    }
+
+
+   public function actionRegistration()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new RegistrationForm();
+
+
+        //if( Yii::$app->request->post() ) return print_r( Yii::$app->request->post()['RegistrationForm'] );
+
+        if ( $model->load( Yii::$app->request->post()) ) {
+            if( $model->save() ) {
+                //$model->save();
+
+                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+
+                //return $this->goHome();
+            }
+        }
+
+        //$user_data = Yiitest::find()->asArray()->all();
+
+        return $this->render('registration', ['model' => $model] );
+
     }
 
     /**
@@ -97,4 +130,8 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+
+
+
 }
