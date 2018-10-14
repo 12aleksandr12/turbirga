@@ -7,7 +7,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\models\RegistrationForm;
-//use common\models\User;
+use common\models\UserdataForm;
+use common\models\User;
+//use yii\base\Exception;
 
 /**
  * Site controller
@@ -104,12 +106,36 @@ class SiteController extends Controller
         //if( Yii::$app->request->post() ) return print_r( Yii::$app->request->post()['RegistrationForm'] );
 
         if ( $model->load( Yii::$app->request->post()) ) {
-            if( $model->save() ) {
-                //$model->save();
+            if( $model->validate() ) {
 
-                return Yii::$app->user->login($model->getUser(), $model->rememberMe ? 3600 * 24 * 30 : 0);
+                $password_hash = Yii::$app->security->generatePasswordHash( $model->password );
 
-                //return $this->goHome();
+                $user = new User();
+                $user->username = $model->username;
+                $user->password_hash = $password_hash;
+                $user->auth_key = '456';
+                $user->email = $model->email;
+                $user->save();
+
+                $user_data = new UserdataForm();
+                $user_data->username = $model->username;
+                $user_data->surname = $model->username;
+                $user_data->password = $password_hash;
+                $user_data->phone = $model->phone;
+                $user_data->email = $model->email;
+                $user_data->role = $model->role;
+                $user_data->viber = $model->viber;
+                $user_data->country = $model->country;
+                $user_data->city = $model->city;
+                $user_data->address = $model->address;
+                $user_data->communication_with_the_operator = $model->communication_with_the_operator;
+                $user_data->company_name = $model->company_name;
+                $user_data->save();
+
+                //var_dump( $user );
+                Yii::$app->user->login( $user , $model->rememberMe ? 3600 * 24 * 30 : 0);
+
+                return $this->goHome();
             }
         }
 

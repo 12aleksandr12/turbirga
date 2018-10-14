@@ -10,9 +10,9 @@ use yii\db\ActiveRecord;
 /**
  * Registration Form
  */
-class RegistrationForm extends Model
+class UserdataForm extends ActiveRecord
 {
-    public $username;
+    /*public $username;
     public $surname;
     public $password;
     public $phone;
@@ -23,9 +23,13 @@ class RegistrationForm extends Model
     public $city;
     public $address;
     public $communication_with_the_operator;
-    public $company_name;
+    public $company_name;*/
 
     public $rememberMe = true;
+
+    public static function tableName(){
+        return 'user_data';
+    }
 
     public function rules()
     {
