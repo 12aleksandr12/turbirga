@@ -217,7 +217,7 @@ class SiteController extends Controller
 
         if($id>0 && $del>0) {
 
-            Usertable::findOne($id)->delete();
+            User::findOne($id)->delete();
             Edituser::findOne($id)->delete();
 
             return Yii::$app->response->redirect(['site/listusers']);
