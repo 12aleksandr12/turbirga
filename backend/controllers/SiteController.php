@@ -9,7 +9,10 @@ use common\models\LoginForm;
 use common\models\RegistrationForm;
 use common\models\UserdataForm;
 use common\models\User;
-//use yii\base\Exception;
+use common\models\Listusers;
+use common\models\Edituser;
+use common\models\Usertable;
+
 
 /**
  * Site controller
@@ -106,14 +109,14 @@ class SiteController extends Controller
         //if( Yii::$app->request->post() ) return print_r( Yii::$app->request->post()['RegistrationForm'] );
 
         if ( $model->load( Yii::$app->request->post()) ) {
-            if( $model->validate() ) {
+            if( $model->validate() ){
 
                 $password_hash = Yii::$app->security->generatePasswordHash( $model->password );
 
                 $user = new User();
                 $user->username = $model->username;
                 $user->password_hash = $password_hash;
-                $user->auth_key = '456';
+                $user->auth_key = Yii::$app->security->generateRandomString();
                 $user->email = $model->email;
                 $user->save();
 
@@ -137,9 +140,10 @@ class SiteController extends Controller
 
                 return $this->goHome();
             }
+            return Yii::$app->response->redirect(['site/registration']);
         }
 
-        //$user_data = Yiitest::find()->asArray()->all();
+
 
         return $this->render('registration', ['model' => $model] );
 
@@ -155,6 +159,72 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionListusers()
+    {
+
+        $users_data = Listusers::find()->asArray()->all();
+        return $this->render('listusers', ['users_data' => $users_data] );
+    }
+
+    public function actionEditdeluser()
+    {
+        $id = $_GET['id'];
+        $del = $_GET['del'];
+        $model = new Edituser;
+
+        $user_data = Edituser::find()->where(['id' => $id])->asArray()->one();
+
+        if($id>0 && !$del) {
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate()) {
+
+                $user_data_post = Yii::$app->request->post()['Edituser'];
+                if ($user_data_post['password']) {
+
+                    $password_hash = Yii::$app->security->generatePasswordHash($user_data_post['password']);
+                    $user_data_post['password'] = $password_hash;
+
+                } else $user_data_post['password'] = $user_data['password'];
+
+                Usertable::updateAll([
+                    'username' => $user_data_post['username'],
+                    'password_hash' => $user_data_post['password'],
+                    'email' => $user_data_post['email'],
+                ], "id = $id");
+
+                Edituser::updateAll([
+                    'username' => $user_data_post['username'],
+                    'surname' => $user_data_post['surname'],
+                    'password' => $user_data_post['password'],
+                    'phone' => $user_data_post['phone'],
+                    'email' => $user_data_post['email'],
+                    'role' => $user_data_post['role'],
+                    'viber' => $user_data_post['viber'],
+                    'country' => $user_data_post['country'],
+                    'city' => $user_data_post['city'],
+                    'communication_with_the_operator' => $user_data_post['communication_with_the_operator'],
+                    'company_name' => $user_data_post['company_name'],
+                ], "id = $id");
+
+                $user_data = $user_data_post;
+            }
+
+            }
+
+        }
+
+        if($id>0 && $del>0) {
+
+            Usertable::findOne($id)->delete();
+            Edituser::findOne($id)->delete();
+
+            return Yii::$app->response->redirect(['site/listusers']);
+        }
+
+
+        return $this->render('editdeluser', compact('model','user_data') );
     }
 
 
