@@ -37,7 +37,7 @@ class Edituser extends ActiveRecord
     {
         return [
             // username and password are both required
-            [['username', 'password', 'email'], 'required'],
+            [['password'], 'required'],
             // rememberMe must be a boolean value
 
             [['surname', 'phone', 'email', 'role', 'viber', 'country', 'city', 'address', 'communication_with_the_operator', 'company_name'], 'trim'],

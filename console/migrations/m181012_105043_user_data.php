@@ -1,7 +1,7 @@
 <?php
 
 use yii\db\Migration;
-
+use common\models\User;
 /**
  * Class m181012_105043_user_data
  */
@@ -20,7 +20,7 @@ class m181012_105043_user_data extends Migration
                 'password' => $this->string(),
                 'phone' => $this->string(),
                 'email' => $this->string(),
-                'role' => $this->integer(),
+                'role' => $this->integer()->defaultValue(User::ROLE_ADMIN),
                 'viber' => $this->string(),
                 'country' => $this->string(),
                 'city' => $this->string(),

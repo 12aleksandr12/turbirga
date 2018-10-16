@@ -12,16 +12,17 @@ class m181011_144953_role extends Migration
      */
     public function safeUp()
     {
-
-        $this->createTable('role',
+        $tableName = 'role';
+        $this->createTable($tableName,
             [
                 'id' => $this->primaryKey(),
                 'value' => $this->string(),
 
             ]);
 
-
-
+        $this->insert($tableName, ['value'=>'Супер администратор']);
+        $this->insert($tableName, ['value'=>'Турагент']);
+        $this->insert($tableName, ['value'=>'Туроператор']);
 
 
     }

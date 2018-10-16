@@ -21,11 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php $form = ActiveForm::begin(['id' => 'registration-form', 'method'=>'post']); ?>
 
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'value'=>$user_data['username'],]) ?>
+            <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'value'=>$user_data['username'], 'disabled'=>'disabled',]) ?>
             <?= $form->field($model, 'surname')->textInput(['autofocus' => true, 'value'=>$user_data['surname'],]) ?>
             <?= $form->field($model, 'password')->textInput(['autofocus' => true, 'type'=>'password']) ?>
             <?= $form->field($model, 'phone')->textInput(['autofocus' => true]) ?>
-            <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'value'=>$user_data['email'],]) ?>
+            <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'value'=>$user_data['email'], 'disabled'=>'disabled',]) ?>
 
             <?= $form->field($model, 'role')->dropDownList($user_data['all_roles']) ?>
             <?= $form->field($model, 'viber')->textInput(['autofocus' => true, 'value'=>$user_data['viber'],]) ?>
