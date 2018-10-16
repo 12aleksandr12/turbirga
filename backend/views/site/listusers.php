@@ -5,7 +5,7 @@
 /* @var $model \common\models\LoginForm */
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+
 
 $this->title = 'A list of users';
 $this->params['breadcrumbs'][] = $this->title;
@@ -25,12 +25,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>id</td>
                     <td>username</td>
                     <td>surname</td>
-                    <td>password</td>
                     <td>phone</td>
                     <td>email</td>
                     <td>country</td>
-                    <td>city</td>
-                    <td>address</td>
+                    <td>role</td>
+                    <td>status</td>
 
                 </tr>
 <?
@@ -41,12 +40,11 @@ foreach($users_data as $key=>$val){
     echo '<td>'. $val['id'] .'</td>';
     echo '<td>'. $val['username'] .'</td>';
     echo '<td>'. $val['surname'] .'</td>';
-    echo '<td>'. $val['password'] .'</td>';
     echo '<td>'. $val['phone'] .'</td>';
     echo '<td>'. $val['email'] .'</td>';
     echo '<td>'. $val['country'] .'</td>';
-    echo '<td>'. $val['city'] .'</td>';
-    echo '<td>'. $val['address'] .'</td>';
+    echo '<td>'. $val['status']['status_user_name'] .'</td>';
+    echo '<td><a style="color:'. $val['status']['color'] .';" title="Change role" href="/site/listusers?id='. $val['id'] .'&change_role='. $val['status']['status_num'] .'">'. $val['status']['role'] .'</a></td>';
 
 
     echo '<td><a href="/site/editdeluser?id='. $val['id'] .'">Редактировать</a></td>';

@@ -11,7 +11,7 @@ use common\models\UserdataForm;
 use common\models\User;
 use common\models\Listusers;
 use common\models\Edituser;
-use common\models\Usertable;
+use common\models\Role;
 
 
 /**
@@ -19,6 +19,9 @@ use common\models\Usertable;
  */
 class SiteController extends Controller
 {
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 10;
+    const STATUS_BLOCKED = 2;
     /**
      * {@inheritdoc}
      */
@@ -114,19 +117,22 @@ class SiteController extends Controller
                 $password_hash = Yii::$app->security->generatePasswordHash( $model->password );
 
                 $user = new User();
+                $user_data = new UserdataForm();
+
+                //$transaction = User::getDb()->beginTransaction();
+
                 $user->username = $model->username;
                 $user->password_hash = $password_hash;
                 $user->auth_key = Yii::$app->security->generateRandomString();
                 $user->email = $model->email;
                 $user->save();
 
-                $user_data = new UserdataForm();
                 $user_data->username = $model->username;
                 $user_data->surname = $model->username;
                 $user_data->password = $password_hash;
                 $user_data->phone = $model->phone;
                 $user_data->email = $model->email;
-                $user_data->role = $model->role;
+                $user_data->role = 1;
                 $user_data->viber = $model->viber;
                 $user_data->country = $model->country;
                 $user_data->city = $model->city;
@@ -134,6 +140,7 @@ class SiteController extends Controller
                 $user_data->communication_with_the_operator = $model->communication_with_the_operator;
                 $user_data->company_name = $model->company_name;
                 $user_data->save();
+
 
                 //var_dump( $user );
                 Yii::$app->user->login( $user , $model->rememberMe ? 3600 * 24 * 30 : 0);
@@ -165,6 +172,37 @@ class SiteController extends Controller
     {
 
         $users_data = Listusers::find()->asArray()->all();
+        $roles = Role::find()->asArray()->all();
+
+        foreach($users_data as $key=>$val) {
+            $id = $_GET['id'];
+            $change_role = $_GET['change_role'];
+            if( $id>0 && $change_role>0 ){
+                if( $change_role==10 ){
+
+                    User::updateAll([
+                        'status' => self::STATUS_BLOCKED,
+                    ], "id = $id");
+
+                }else{
+
+                    User::updateAll([
+                        'status' => self::STATUS_ACTIVE,
+                    ], "id = $id");
+
+                }
+
+            }
+            $status_user = User::findOne($val['id'])['status'];
+            $status_user_name = '';
+
+            foreach($roles as $v){
+                if( $v['id']==$val['role'] ) $status_user_name = $v['value'];
+            }
+            if ($status_user == 10) $users_data[$key]['status'] = ['status_user_name'=>$status_user_name, 'role' => 'Active', 'status_num' => $status_user, 'color' => 'green'];
+            if ($status_user == 2) $users_data[$key]['status'] = ['status_user_name'=>$status_user_name, 'role' => 'Blocked', 'status_num' => $status_user, 'color' => 'red'];
+        }
+
         return $this->render('listusers', ['users_data' => $users_data] );
     }
 
@@ -176,11 +214,22 @@ class SiteController extends Controller
 
         $user_data = Edituser::find()->where(['id' => $id])->asArray()->one();
 
+        $all_roles_bad = Role::find()->asArray()->all();
+        $all_roles = array();
+        $user_data['params'] = ['options'=>'Турагент'];
+
+        foreach($all_roles_bad as $val){
+            $all_roles[$val['id']] = $val['value'];
+            if( $val['id']==$user_data['role'] ) $user_data['params'] = ['options'=>'Турагент'];
+        }
+        $user_data['all_roles'] = $all_roles;
+
         if($id>0 && !$del) {
             if ($model->load(Yii::$app->request->post())) {
                 if ($model->validate()) {
 
                 $user_data_post = Yii::$app->request->post()['Edituser'];
+                //print_r( $user_data_post);
                 if ($user_data_post['password']) {
 
                     $password_hash = Yii::$app->security->generatePasswordHash($user_data_post['password']);
@@ -188,11 +237,12 @@ class SiteController extends Controller
 
                 } else $user_data_post['password'] = $user_data['password'];
 
-                Usertable::updateAll([
+                    User::updateAll([
                     'username' => $user_data_post['username'],
                     'password_hash' => $user_data_post['password'],
                     'email' => $user_data_post['email'],
                 ], "id = $id");
+
 
                 Edituser::updateAll([
                     'username' => $user_data_post['username'],
@@ -209,6 +259,8 @@ class SiteController extends Controller
                 ], "id = $id");
 
                 $user_data = $user_data_post;
+                $user_data['all_roles'] = $all_roles;
+                $user_data['params'] = ['options'=>'Турагент'];
             }
 
             }

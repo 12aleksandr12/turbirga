@@ -32,9 +32,10 @@ class RegistrationForm extends Model
         return [
             // username and password are both required
             [['username', 'password', 'email'], 'required'],
+
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            [['surname', 'phone', 'email', 'role', 'viber', 'country', 'city', 'address', 'communication_with_the_operator', 'company_name'], 'trim'],
+            [['surname', 'phone', 'email', 'viber', 'country', 'city', 'address', 'communication_with_the_operator', 'company_name'], 'trim'],
             // password is validated by validatePassword()
 
             ['email', 'email'],

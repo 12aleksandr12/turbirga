@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'phone')->textInput(['autofocus' => true]) ?>
             <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
-            <?= $form->field($model, 'role')->textInput(['autofocus' => true]) ?>
+
             <?= $form->field($model, 'viber')->textInput(['autofocus' => true]) ?>
             <?= $form->field($model, 'country')->textInput(['autofocus' => true]) ?>
             <?= $form->field($model, 'city')->textInput(['autofocus' => true]) ?>

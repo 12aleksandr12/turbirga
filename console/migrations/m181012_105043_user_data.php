@@ -20,7 +20,7 @@ class m181012_105043_user_data extends Migration
                 'password' => $this->string(),
                 'phone' => $this->string(),
                 'email' => $this->string(),
-                'role' => $this->string(),
+                'role' => $this->integer(),
                 'viber' => $this->string(),
                 'country' => $this->string(),
                 'city' => $this->string(),
