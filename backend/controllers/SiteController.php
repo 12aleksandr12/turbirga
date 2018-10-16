@@ -16,9 +16,7 @@ use common\models\Role;
  */
 class SiteController extends Controller
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-    const STATUS_BLOCKED = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -109,40 +107,8 @@ class SiteController extends Controller
         if ( $model->load( Yii::$app->request->post()) ) {
             if( $model->validate() ){
 
-                $password_hash = Yii::$app->security->generatePasswordHash( $model->password );
+                return $model->registUser();
 
-                $user = new User();
-                $user_data = new UserdataForm();
-
-                //$transaction = User::getDb()->beginTransaction();
-
-                $user->username = $model->username;
-                $user->password_hash = $password_hash;
-                $user->auth_key = Yii::$app->security->generateRandomString();
-                $user->email = $model->email;
-
-                if( $user->save() ) {
-
-                    $user_data->username = $model->username;
-                    $user_data->surname = $model->username;
-                    $user_data->password = $password_hash;
-                    $user_data->phone = $model->phone;
-                    $user_data->email = $model->email;
-                    $user_data->role = 1;
-                    $user_data->viber = $model->viber;
-                    $user_data->country = $model->country;
-                    $user_data->city = $model->city;
-                    $user_data->address = $model->address;
-                    $user_data->communication_with_the_operator = $model->communication_with_the_operator;
-                    $user_data->company_name = $model->company_name;
-                    $user_data->save();
-
-                }else return Yii::$app->response->redirect(['site/registration']);
-
-                //var_dump( $user );
-                Yii::$app->user->login( $user , $model->rememberMe ? 3600 * 24 * 30 : 0);
-
-                return $this->goHome();
             }
             return Yii::$app->response->redirect(['site/registration']);
         }
@@ -180,13 +146,13 @@ class SiteController extends Controller
                 if( $change_role==10 ){
 
                     User::updateAll([
-                        'status' => self::STATUS_BLOCKED,
+                        'status' => User::STATUS_BLOCKED,
                     ], "id = $id");
 
                 }else{
 
                     User::updateAll([
-                        'status' => self::STATUS_ACTIVE,
+                        'status' => User::STATUS_ACTIVE,
                     ], "id = $id");
 
                 }
