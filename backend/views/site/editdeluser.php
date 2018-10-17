@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
+//if( empty($user_data) ) exit;
 
 $this->title = 'Edit ' . $user_data['username'];
 $this->params['breadcrumbs'][] = $this->title;

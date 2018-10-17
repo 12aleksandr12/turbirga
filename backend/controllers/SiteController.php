@@ -142,9 +142,14 @@ class SiteController extends Controller
 
     public function actionEditdeluser()
     {
+        $data_get = Yii::$app->request->get();
+        $id = $data_get['id'];
+        $del = $data_get['del'];
 
         $model = new Edituser;
         $user_data = $model->editUser();
+
+        if( !empty($id) && !empty($del) ) return Yii::$app->response->redirect(['site/listusers']);
 
         return $this->render('editdeluser', compact('model','user_data') );
     }

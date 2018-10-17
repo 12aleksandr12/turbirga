@@ -54,11 +54,18 @@ class Edituser extends ActiveRecord
         $id = $data_get['id'];
         $del = $data_get['del'];
 
-        $user_data = Edituser::find()->where(['id' => $id])->asArray()->one();
+        $user_data = $this::find()->where(['id' => $id])->asArray()->one();
 
         $all_roles_bad = Role::find()->asArray()->all();
         $all_roles = array();
 
+
+        $usersDataNew = $this::find()
+            ->leftJoin(Role::tablename(),'role.id = user_data.role')
+            ->indexBy('id')
+            ->all();
+
+        print_r($usersDataNew);
 
         foreach($all_roles_bad as $val){
             $all_roles[$val['id']] = $val['value'];
@@ -113,7 +120,8 @@ class Edituser extends ActiveRecord
             User::findOne($id)->delete();
             Edituser::findOne($id)->delete();
 
-            return Yii::$app->response->redirect(['site/listusers']);
+            //return Yii::$app->response->redirect(['site/listusers']);
+            return $user_data;
         }
         return $user_data;
 
