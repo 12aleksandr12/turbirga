@@ -60,12 +60,13 @@ class Edituser extends ActiveRecord
         $all_roles = array();
 
 
-        $usersDataNew = $this::find()
-            ->leftJoin(Role::tablename(),'role.id = user_data.role')
+        $userDataNew = $this::find()
+            ->joinWith('roleMethod')
             ->indexBy('id')
             ->all();
 
-        print_r($usersDataNew);
+
+        //print_r($userDataNew[73]->roleMethod);
 
         foreach($all_roles_bad as $val){
             $all_roles[$val['id']] = $val['value'];
@@ -127,7 +128,11 @@ class Edituser extends ActiveRecord
 
     }
 
+    public function getRoleMethod()
+    {
 
+        return $this->hasOne(Role::className(), ['id' => 'role']);
+    }
 
 
 

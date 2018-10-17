@@ -7,7 +7,6 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-//if( empty($user_data) ) exit;
 
 $this->title = 'Edit ' . $user_data['username'];
 $this->params['breadcrumbs'][] = $this->title;
@@ -28,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'phone')->textInput(['autofocus' => true]) ?>
             <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'value'=>$user_data['email'], 'disabled'=>'disabled',]) ?>
 
-            <?= $form->field($model, 'role')->dropDownList($user_data['all_roles']) ?>
+            <?= $form->field($model, 'role')->dropDownList($user_data['all_roles'], ['value'=>'']) ?>
             <?= $form->field($model, 'viber')->textInput(['autofocus' => true, 'value'=>$user_data['viber'],]) ?>
             <?= $form->field($model, 'country')->textInput(['autofocus' => true, 'value'=>$user_data['country'],]) ?>
             <?= $form->field($model, 'city')->textInput(['autofocus' => true, 'value'=>$user_data['city'],]) ?>

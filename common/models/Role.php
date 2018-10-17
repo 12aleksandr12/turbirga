@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
 class Role extends ActiveRecord
 {
 
+    const ROLE_ADMIN = 1;
+
     public static function tableName()
     {
         return 'role';
