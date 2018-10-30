@@ -59,7 +59,7 @@ public function registUser(){
 
     try {
 
-        if ($user->save()) {
+            $user->save();
 
             $user_data->username = $this->username;
             $user_data->surname = $this->username;
@@ -75,7 +75,7 @@ public function registUser(){
             $user_data->company_name = $this->company_name;
             $user_data->save();
 
-        }// else return Yii::$app->response->redirect(['site/registration']);
+        // else return Yii::$app->response->redirect(['site/registration']);
 
         $transaction->commit();
     } catch (\Exception $e) {

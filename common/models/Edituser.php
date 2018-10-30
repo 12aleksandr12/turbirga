@@ -94,7 +94,7 @@ class Edituser extends ActiveRecord
                         'password_hash' => $user_data_post['password'],
                     ], "id = $id");
 
-
+/*
                     Edituser::updateAll([
                         'surname' => $user_data_post['surname'],
                         'password' => $user_data_post['password'],
@@ -106,6 +106,14 @@ class Edituser extends ActiveRecord
                         'communication_with_the_operator' => $user_data_post['communication_with_the_operator'],
                         'company_name' => $user_data_post['company_name'],
                     ], "id = $id");
+*/
+
+                    $sendData = ['Edituser'=>$user_data_post];
+                    $model = EditUser::find()->where(['id'=>$id])->one();
+
+                    //if( $model->load($sendData) && $model->save() ) echo "Update true";
+                    $model->load($sendData);
+                    $model->save();
 
                     $user_data = $user_data_post;
                     $user_data['all_roles'] = $all_roles;

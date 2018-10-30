@@ -26,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'password')->textInput(['autofocus' => true, 'type'=>'password']) ?>
             <?= $form->field($model, 'phone')->textInput(['autofocus' => true]) ?>
             <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'value'=>$user_data['email'], 'disabled'=>'disabled',]) ?>
-
-            <?= $form->field($model, 'role')->dropDownList($user_data['all_roles'], ['value'=>'']) ?>
+<? //print_r($user_data['params'] ); ?>
+            <?= $form->field($model, 'role')->dropDownList($user_data['all_roles']) ?>
             <?= $form->field($model, 'viber')->textInput(['autofocus' => true, 'value'=>$user_data['viber'],]) ?>
             <?= $form->field($model, 'country')->textInput(['autofocus' => true, 'value'=>$user_data['country'],]) ?>
             <?= $form->field($model, 'city')->textInput(['autofocus' => true, 'value'=>$user_data['city'],]) ?>
